@@ -18,6 +18,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         networkManager.obtainQuestions() { [weak self] (result) in
+            print()
             switch result {
             case .success(users: let users):
                 
