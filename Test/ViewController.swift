@@ -10,33 +10,20 @@ import UIKit
 class ViewController: UIViewController {
 
     let networkManager = NetworkManager()
+    let path = "2.3/questions?order=desc&sort=activity&site=stackoverflow"
 
     let tags = ["Objective-C", "Xcode", "iOS", "Cocoa Touch", "iPhone"]
-    var dataSource = [User]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        networkManager.obtainQuestions() { [weak self] (result) in
-            print()
-            switch result {
-            case .success(users: let users):
-                
-                self?.dataSource = users
-                
-            case .failure(errors: let errors):
-                print(errors)
+        networkManager.obtainQuestions(path: path) { (result) in
+            guard let items = result.items else { return }
+            
+            for i in items {
+                print(i.questionID ?? "nil")
             }
-
-//            print("Error: \(error?.localizedDescription ?? "")")
-//                print(item.name)
+        }
             
         }
-        
-        
-    }
-    
-    
-    
 }
-

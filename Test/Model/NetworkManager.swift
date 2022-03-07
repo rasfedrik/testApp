@@ -7,50 +7,26 @@
 
 import Foundation
 
-enum ObtainResult {
-    case success(users: [User])
-    case failure(errors: Error)
-}
-
 class NetworkManager {
     
     private let session = URLSession.shared
     private let decoder = JSONDecoder()
+    private let baseURL = URL(string: "https://api.stackexchange.com/")
 
-    func obtainQuestions(completion: @escaping (ObtainResult) -> Void ) {
+    func obtainQuestions(path: String, completion: @escaping (Response) -> Void ) {
         
-        let baseURL = URL(string: "https://api.stackexchange.com/2.3/users/55/tags?order=desc&sort=popular&site=stackoverflow")
-        let urlString = "\(baseURL!)"
+        let urlString = "\(baseURL!)\(path)"
         
-        guard let url = URL(string: urlString) else { return print("nope") }
+        guard let url = URL(string: urlString) else { return }
         
         session.dataTask(with: url) { [weak self] data, response, error in
-
-            var result: ObtainResult
-
-            defer {
-                DispatchQueue.main.async {
-                    completion(result)
-                }
-            }
-
-            guard let strongSelf = self else {
-                result = .success(users: [])
-                return
-            }
+            
+            guard let strongSelf = self else { return }
             
             if error == nil, let data = data {
-                
-                guard let tagQuestion = try? strongSelf.decoder.decode([User].self, from: data) else {
-                    result = .success(users: [])
-                    return
-                }
-
-                result = .success(users: tagQuestion)
-            } else {
-                result = .failure(errors: error!)
+                guard let question = try? strongSelf.decoder.decode(Response.self, from: data) else { return }
+                completion(question)
             }
-            
-        }.resume()
+        }
     }
 }
