@@ -7,38 +7,48 @@
 
 import Foundation
 
+enum ObtainResult {
+    case success(users: [User])
+    case failure(errors: Error)
+}
+
 class NetworkManager {
     
     private let session = URLSession.shared
     private let decoder = JSONDecoder()
-    
-    
 
-    
-    func obtainQuestions(path: String, completion: @escaping (JSONResponse?) -> Void ) {
-                
-//        let baseURL = URL(string: "https://api.stackexchange.com/")
+    func obtainQuestions(completion: @escaping (ObtainResult) -> Void ) {
         
-        let baseURL = URL(string: "https://api.stackexchange.com/2.3/tags/\(path)/info?order=desc&sort=popular&site=stackoverflow")
+        let baseURL = URL(string: "https://api.stackexchange.com/2.3/users/55/tags?order=desc&sort=popular&site=stackoverflow")
         let urlString = "\(baseURL!)"
-//        let urlString = "\(baseURL!)\(path)"
         
         guard let url = URL(string: urlString) else { return print("nope") }
         
         session.dataTask(with: url) { [weak self] data, response, error in
-            
+
+            var result: ObtainResult
+
+            defer {
+                DispatchQueue.main.async {
+                    completion(result)
+                }
+            }
+
             guard let strongSelf = self else {
+                result = .success(users: [])
                 return
             }
             
-            if error == nil {
-                guard let data = data else { return }
+            if error == nil, let data = data {
                 
-                let tagQuestion = try? strongSelf.decoder.decode(JSONResponse.self, from: data)
-                completion(tagQuestion)
-                
+                guard let tagQuestion = try? strongSelf.decoder.decode([User].self, from: data) else {
+                    result = .success(users: [])
+                    return
+                }
+
+                result = .success(users: tagQuestion)
             } else {
-                print("Error: \(error?.localizedDescription ?? "")")
+                result = .failure(errors: error!)
             }
             
         }.resume()

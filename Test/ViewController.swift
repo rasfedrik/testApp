@@ -11,20 +11,31 @@ class ViewController: UIViewController {
 
     let networkManager = NetworkManager()
 
-    var tags = ["Objective-C", "Xcode", "iOS", "Cocoa Touch", "iPhone"]
-
+    let tags = ["Objective-C", "Xcode", "iOS", "Cocoa Touch", "iPhone"]
+    var dataSource = [User]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        networkManager.obtainQuestions(path: "swift;Xcode") { (response) in
-            guard let items = response?.items else { return }
-            
-            for item in items {
-                print(item.name!)
+        networkManager.obtainQuestions() { [weak self] (result) in
+            switch result {
+            case .success(users: let users):
+                
+                self?.dataSource = users
+                
+            case .failure(errors: let errors):
+                print(errors)
             }
+
+//            print("Error: \(error?.localizedDescription ?? "")")
+//                print(item.name)
+            
         }
+        
+        
     }
+    
+    
     
 }
 
