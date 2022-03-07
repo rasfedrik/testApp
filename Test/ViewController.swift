@@ -12,7 +12,6 @@ class ViewController: UIViewController {
     let networkManager = NetworkManager()
 
     var tags = ["Objective-C", "Xcode", "iOS", "Cocoa Touch", "iPhone"]
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +20,7 @@ class ViewController: UIViewController {
             guard let items = response?.items else { return }
             
             for item in items {
-                print(item.name!)
+                print(item.questionName!)
             }
         }
     }
