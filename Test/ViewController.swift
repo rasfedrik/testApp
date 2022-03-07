@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         networkManager.obtainQuestions(path: path) { (result) in
-            guard let items = result.items else { return  print("none")}
+//            guard let items = result.items else { return  print("none")}
             
             for item in items {
                 print(item.questionName!)
