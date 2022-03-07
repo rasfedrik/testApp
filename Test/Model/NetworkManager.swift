@@ -11,34 +11,21 @@ class NetworkManager {
     
     private let session = URLSession.shared
     private let decoder = JSONDecoder()
-    
-    
+    private let baseURL = URL(string: "https://api.stackexchange.com/")
 
-    
-    func obtainQuestions(path: String, completion: @escaping (JSONResponse?) -> Void ) {
-                
-//        let baseURL = URL(string: "https://api.stackexchange.com/")
+    func obtainQuestions(path: String, completion: @escaping (Response) -> Void ) {
         
-        let baseURL = URL(string: "https://api.stackexchange.com/2.3/tags/\(path)/info?order=desc&sort=popular&site=stackoverflow")
-        let urlString = "\(baseURL!)"
-//        let urlString = "\(baseURL!)\(path)"
+        let urlString = "\(baseURL!)\(path)"
         
-        guard let url = URL(string: urlString) else { return print("nope") }
+        guard let url = URL(string: urlString) else { return }
         
         session.dataTask(with: url) { [weak self] data, response, error in
             
-            guard let strongSelf = self else {
-                return
-            }
+            guard let strongSelf = self else { return }
             
-            if error == nil {
-                guard let data = data else { return }
-                
-                let tagQuestion = try? strongSelf.decoder.decode(JSONResponse.self, from: data)
-                completion(tagQuestion)
-                
-            } else {
-                print("Error: \(error?.localizedDescription ?? "")")
+            if error == nil, let data = data {
+                guard let question = try? strongSelf.decoder.decode(Response.self, from: data) else { return }
+                completion(question)
             }
             
         }.resume()

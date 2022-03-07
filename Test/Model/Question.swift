@@ -7,16 +7,31 @@
 
 import Foundation
 
-struct JSONResponse: Codable {
+struct Response: Codable {
     let items: [Question]?
 }
 
 struct Question: Codable {
-    let count: Int?
-    let name: String?
-    let questionName: String?
+    let tags: [String?]
+    let questionID: Int?
     let answersCount: Int?
-    let userName: String?
-    let dateOfLastModification: Int?
+    let owner: Owner?
+    let lastEditDate: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case questionID = "question_id"
+        case answersCount = "answer_count"
+        case owner, tags
+        case lastEditDate = "last_edit_date"
+    }
 }
+
+struct Owner: Codable {
+    let displayName: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case displayName = "display_name"
+    }
+}
+
 

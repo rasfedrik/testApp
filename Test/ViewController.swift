@@ -16,14 +16,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        networkManager.obtainQuestions(path: "swift;Xcode") { (response) in
-            guard let items = response?.items else { return }
+        networkManager.obtainQuestions(path: path) { (result) in
+            guard let items = result.items else { return  print("none")}
             
             for item in items {
                 print(item.questionName!)
             }
         }
     }
-    
 }
-
