@@ -12,20 +12,21 @@ struct Response: Codable {
 }
 
 struct Question: Codable {
+    let tags: [String?]
     let questionID: Int?
     let answersCount: Int?
-    let user: User?
+    let owner: Owner?
     let lastEditDate: Int?
     
     enum CodingKeys: String, CodingKey {
         case questionID = "question_id"
         case answersCount = "answer_count"
-        case user
+        case owner, tags
         case lastEditDate = "last_edit_date"
     }
 }
 
-struct User: Codable {
+struct Owner: Codable {
     let displayName: String?
     
     enum CodingKeys: String, CodingKey {

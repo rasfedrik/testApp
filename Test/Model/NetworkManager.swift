@@ -27,6 +27,7 @@ class NetworkManager {
                 guard let question = try? strongSelf.decoder.decode(Response.self, from: data) else { return }
                 completion(question)
             }
+            
         }.resume()
     }
 }
