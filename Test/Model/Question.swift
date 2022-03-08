@@ -7,23 +7,24 @@
 
 import Foundation
 
-struct Response: Codable {
+struct ResponseQuestion: Codable {
     let items: [Question]?
 }
 
 struct Question: Codable {
     let tags: [String?]
     let questionID: Int?
-    let answersCount: Int?
+    let answer: Answer?
+    let answerCount: Int?
     let owner: Owner?
     let lastEditDate: Int?
     let title: String?
     
     enum CodingKeys: String, CodingKey {
         case questionID = "question_id"
-        case answersCount = "answer_count"
-        case owner, tags, title
         case lastEditDate = "last_edit_date"
+        case answerCount = "answer_count"
+        case owner, tags, title, answer
     }
 }
 
@@ -36,3 +37,16 @@ struct Owner: Codable {
 }
 
 
+struct ResponseAnswer: Codable {
+    let items: [Answer]?
+}
+
+struct Answer: Codable {
+    let owner: Owner?
+    let answerID: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case answerID = "answer_id"
+        case owner
+    }
+}

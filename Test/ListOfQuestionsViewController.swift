@@ -12,9 +12,6 @@ class ListOfQuestionsViewController: UIViewController  {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var listOfQuestionsButton: UIBarButtonItem!
 
-//    let screenWith = UIScreen.main.bounds.width - 10
-//    let screenHeight = UIScreen.main.bounds.height / 2
-
     private let networkManager = NetworkManager()
     
     // Теги
@@ -25,72 +22,71 @@ class ListOfQuestionsViewController: UIViewController  {
     
     // Номер и количество строк
     var currentPage = 1
-    let pageSize = 20
+    let pageSize = 10
 
-    
-    let pickerView: UIPickerView = {
-        var picker = UIPickerView()
-        picker.backgroundColor = .white
-//        picker.layer.cornerRadius = 35
-        picker.frame = CGRect(x: 0, y: 0, width: 250, height: 200)
-//        picker.layer.borderWidth = 0.5
-        return picker
-    }()
-    var chosedTag: String = "iOS"
-    
-    // Вторая часть пути
-    var path: String {
-        return "2.3/questions?order=desc&sort=activity&tagged=\(chosedTag)&site=stackoverflow&page=\(currentPage)&pagesize=\(pageSize)"
+    var currentTag: String = "Objective-C" {
+        didSet {
+            obtainQuestions()
+        }
     }
     
+    var toolBar = UIToolbar()
+    var picker  = UIPickerView()
+
     
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = currentTag
 
-        self.title = chosedTag
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+        self.obtainQuestions()
+        self.registeredCustomTableViewCell()
+    }
+    
+    func obtainQuestions() {
+        // Вторая часть пути
+        var path: String {
+            return "2.3/questions?order=desc&sort=activity&tagged=\(currentTag)&site=stackoverflow&page=\(currentPage)&pagesize=\(pageSize)"
+        }
         
         networkManager.obtainQuestions(path: path) { (result) in
             guard let items = result.items else { return }
             self.questions = items
-            
-            self.currentPage += self.pageSize
-            
             // Обновление таблицы
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
-
-        tableView.dataSource = self
-        tableView.delegate = self
     }
     
     
     // MARK: - Кнопка смены тега
     @IBAction func changeTag(_ sender: UIBarButtonItem) {
-        pickerView.isHidden = !pickerView.isHidden
-
-        self.view.addSubview(pickerView)
+        picker = UIPickerView.init()
+        picker.delegate = self
+        picker.dataSource = self
+        picker.backgroundColor = UIColor.white
+        picker.setValue(UIColor.black, forKey: "textColor")
+        picker.autoresizingMask = .flexibleWidth
+        picker.contentMode = .center
+        picker.frame = CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 300)
+        self.view.addSubview(picker)
         
-        pickerView.center = self.view.center
-        pickerView.dataSource = self
-        pickerView.delegate = self
-
-        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 200))
-        toolBar.sizeToFit()
-
-        let button = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(click))
-
-        toolBar.setItems([button], animated: true)
-        toolBar.isUserInteractionEnabled = true
-        
-        pickerView.addSubview(toolBar)
+        toolBar = UIToolbar.init(frame: CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 50))
+        toolBar.items = [UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(onDoneButtonTapped))]
+        self.view.addSubview(toolBar)
     }
 
-    @objc func click() {
-//        self.view.endEditing(true)
-        print("1")
+    @objc func onDoneButtonTapped() {
+        picker.removeFromSuperview()
+        toolBar.removeFromSuperview()
+    }
+    
+    private func registeredCustomTableViewCell() {
+        let textField = UINib(nibName: "CustomTableViewCell", bundle: nil)
+        self.tableView.register(textField, forCellReuseIdentifier: "CustomTableViewCell")
     }
 }
 
@@ -102,16 +98,32 @@ extension ListOfQuestionsViewController: UITableViewDataSource, UITableViewDeleg
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
-    
-        cell.textLabel?.text = questions[indexPath.row].owner?.displayName
 
-        return cell
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell") as? CustomTableViewCell {
+            
+            let textLabel = questions[indexPath.row]
+            
+            cell.nameLabel.text = textLabel.owner?.displayName
+            cell.questionLabel.text = textLabel.title
+            cell.answersLabel.text = "Количество ответов - \(textLabel.answerCount ?? 0)"
+            cell.dataLabel.text = "Дата - \(textLabel.lastEditDate ?? 0)"
+            return cell
+        }
+            
+        return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let vc = storyboard?.instantiateViewController(identifier: "QuestionDescriptionViewController") as! QuestionDescriptionViewController
+        let path = questions[indexPath.row]
+        
+        vc.title = path.owner?.displayName
+        vc.textQuestion.text = questions[indexPath.row].title
+        vc.question = "\(path.questionID ?? 0)"
+        
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
@@ -130,11 +142,9 @@ extension ListOfQuestionsViewController: UIPickerViewDataSource, UIPickerViewDel
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        for (i, text) in tags.enumerated() {
-            if i == row {
-                self.title = text
-                chosedTag = text
-            }
+
+        currentTag = tags[row]
+            self.title = currentTag
         }
     }
-}
+

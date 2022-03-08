@@ -16,6 +16,10 @@
 		D84E654827D4E4450027F354 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D84E654627D4E4450027F354 /* LaunchScreen.storyboard */; };
 		D84E655127D4E6320027F354 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84E655027D4E6320027F354 /* NetworkManager.swift */; };
 		D84E655427D4E8D40027F354 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84E655327D4E8D40027F354 /* Question.swift */; };
+		D8C3BA0627D79F2800DDD254 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3BA0427D79F2800DDD254 /* CustomTableViewCell.swift */; };
+		D8C3BA0727D79F2800DDD254 /* CustomTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8C3BA0527D79F2800DDD254 /* CustomTableViewCell.xib */; };
+		D8C3BA0B27D7C32C00DDD254 /* DescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C3BA0927D7C32C00DDD254 /* DescriptionTableViewCell.swift */; };
+		D8C3BA0C27D7C32C00DDD254 /* DescriptionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8C3BA0A27D7C32C00DDD254 /* DescriptionTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +34,10 @@
 		D84E654927D4E4450027F354 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D84E655027D4E6320027F354 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		D84E655327D4E8D40027F354 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		D8C3BA0427D79F2800DDD254 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
+		D8C3BA0527D79F2800DDD254 /* CustomTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTableViewCell.xib; sourceTree = "<group>"; };
+		D8C3BA0927D7C32C00DDD254 /* DescriptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionTableViewCell.swift; sourceTree = "<group>"; };
+		D8C3BA0A27D7C32C00DDD254 /* DescriptionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DescriptionTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +84,10 @@
 				D84E655627D4EC730027F354 /* Model */,
 				D84554E827D62CED00D044A7 /* ListOfQuestionsViewController.swift */,
 				D84554EC27D62D7700D044A7 /* QuestionDescriptionViewController.swift */,
+				D8C3BA0927D7C32C00DDD254 /* DescriptionTableViewCell.swift */,
+				D8C3BA0427D79F2800DDD254 /* CustomTableViewCell.swift */,
+				D8C3BA0A27D7C32C00DDD254 /* DescriptionTableViewCell.xib */,
+				D8C3BA0527D79F2800DDD254 /* CustomTableViewCell.xib */,
 				D84E654127D4E43B0027F354 /* Main.storyboard */,
 				D84E654427D4E4450027F354 /* Assets.xcassets */,
 				D84E654927D4E4450027F354 /* Info.plist */,
@@ -150,7 +162,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D84E654827D4E4450027F354 /* LaunchScreen.storyboard in Resources */,
+				D8C3BA0C27D7C32C00DDD254 /* DescriptionTableViewCell.xib in Resources */,
 				D84E654527D4E4450027F354 /* Assets.xcassets in Resources */,
+				D8C3BA0727D79F2800DDD254 /* CustomTableViewCell.xib in Resources */,
 				D84E654327D4E43B0027F354 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -162,9 +176,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8C3BA0B27D7C32C00DDD254 /* DescriptionTableViewCell.swift in Sources */,
 				D84E655427D4E8D40027F354 /* Question.swift in Sources */,
 				D84E655127D4E6320027F354 /* NetworkManager.swift in Sources */,
 				D84E653C27D4E43B0027F354 /* AppDelegate.swift in Sources */,
+				D8C3BA0627D79F2800DDD254 /* CustomTableViewCell.swift in Sources */,
 				D84554ED27D62D7700D044A7 /* QuestionDescriptionViewController.swift in Sources */,
 				D84E653E27D4E43B0027F354 /* SceneDelegate.swift in Sources */,
 				D84554E927D62CED00D044A7 /* ListOfQuestionsViewController.swift in Sources */,
