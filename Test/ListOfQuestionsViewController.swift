@@ -22,7 +22,7 @@ class ListOfQuestionsViewController: UIViewController  {
     
     // Номер и количество строк
     var currentPage = 1
-    let pageSize = 10
+    let pageSize = 20
 
     var currentTag: String = "Objective-C" {
         didSet {
