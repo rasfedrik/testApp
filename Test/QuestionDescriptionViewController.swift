@@ -92,6 +92,4 @@ extension QuestionDescriptionViewController: UITableViewDataSource, UITableViewD
 
         return cell
     }
-    
-    
 }
