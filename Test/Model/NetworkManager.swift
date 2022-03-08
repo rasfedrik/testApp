@@ -20,14 +20,13 @@ class NetworkManager {
         guard let url = URL(string: urlString) else { return }
         
         session.dataTask(with: url) { [weak self] data, response, error in
-            
+
             guard let strongSelf = self else { return }
             
             if error == nil, let data = data {
                 guard let question = try? strongSelf.decoder.decode(Response.self, from: data) else { return }
                 completion(question)
             }
-            
         }.resume()
     }
 }

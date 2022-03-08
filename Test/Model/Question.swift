@@ -17,11 +17,12 @@ struct Question: Codable {
     let answersCount: Int?
     let owner: Owner?
     let lastEditDate: Int?
+    let title: String?
     
     enum CodingKeys: String, CodingKey {
         case questionID = "question_id"
         case answersCount = "answer_count"
-        case owner, tags
+        case owner, tags, title
         case lastEditDate = "last_edit_date"
     }
 }
