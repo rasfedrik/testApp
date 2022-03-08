@@ -28,15 +28,6 @@ struct Question: Codable {
     }
 }
 
-struct Owner: Codable {
-    let displayName: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case displayName = "display_name"
-    }
-}
-
-
 struct ResponseAnswer: Codable {
     let items: [Answer]?
 }
@@ -50,3 +41,12 @@ struct Answer: Codable {
         case owner
     }
 }
+
+struct Owner: Codable {
+    let displayName: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case displayName = "display_name"
+    }
+}
+
