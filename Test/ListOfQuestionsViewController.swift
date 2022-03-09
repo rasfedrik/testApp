@@ -22,46 +22,80 @@ class ListOfQuestionsViewController: UIViewController  {
     
     // Номер и количество строк
     var currentPage = 1
-    let pageSize = 20
+    let pageSize = 5
 
     var currentTag: String = "Objective-C" {
         didSet {
+            currentPage = 1
+            questions = []
             obtainQuestions()
         }
     }
     
+    private var indicator = UIActivityIndicatorView()
+    
+    func initActivityIndicator() {
+        indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        indicator.style = .large
+        indicator.center = self.view.center
+        indicator.hidesWhenStopped = true
+        indicator.color = .white
+        indicator.backgroundColor = .clear
+        view.addSubview(indicator)
+    }
+    
     var toolBar = UIToolbar()
     var picker  = UIPickerView()
-
     
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = currentTag
-
-        self.tableView.dataSource = self
-        self.tableView.delegate = self
-        self.obtainQuestions()
-        self.registeredCustomTableViewCell()
+        tableView.dataSource = self
+        tableView.delegate = self
+        registeredCustomTableViewCell()
+        initActivityIndicator()
+        obtainQuestions()
     }
     
     func obtainQuestions() {
-        // Вторая часть пути
-        var path: String {
-            return "2.3/questions?order=desc&sort=activity&tagged=\(currentTag)&site=stackoverflow&page=\(currentPage)&pagesize=\(pageSize)"
-        }
+        indicator.startAnimating()
+        let path = "2.3/questions?order=desc&sort=activity&tagged=\(currentTag)&site=stackoverflow&page=\(currentPage)&pagesize=\(pageSize)"
         
-        networkManager.obtainQuestions(path: path) { (result) in
+        networkManager.obtainQuestions(path: addPlus(str: path)) { [self] (result) in
             guard let items = result.items else { return }
-            self.questions = items
+            
+            let inserFromIndex = questions.count
+            questions += items
+            currentPage = questions.count / pageSize
             // Обновление таблицы
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                if questions.count > pageSize {
+                    var indexes = [IndexPath]()
+                    for i in inserFromIndex...questions.count - 1 {
+                        indexes.append(.init(row: i, section: 0))
+                    }
+                    tableView.insertRows(at: indexes, with: .right)
+                    indicator.stopAnimating()
+                }
+                tableView.reloadData()
+                indicator.stopAnimating()
             }
         }
     }
-    
-    
+
+    private func addPlus(str: String) -> String {
+        var newWord = ""
+        for i in str {
+            if i == " " {
+                newWord += "_"
+            } else {
+                newWord += String(i)
+            }
+        }
+        return newWord
+    }
+
     // MARK: - Кнопка смены тега
     @IBAction func changeTag(_ sender: UIBarButtonItem) {
         picker = UIPickerView.init()
@@ -113,6 +147,12 @@ extension ListOfQuestionsViewController: UITableViewDataSource, UITableViewDeleg
         return UITableViewCell()
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == questions.count - 1 {
+            obtainQuestions()
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -121,7 +161,7 @@ extension ListOfQuestionsViewController: UITableViewDataSource, UITableViewDeleg
         
         vc.title = path.owner?.displayName
         vc.textQuestion.text = questions[indexPath.row].title
-        vc.question = "\(path.questionID ?? 0)"
+        vc.question = questions[indexPath.row]
         
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -142,9 +182,8 @@ extension ListOfQuestionsViewController: UIPickerViewDataSource, UIPickerViewDel
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-
         currentTag = tags[row]
             self.title = currentTag
-        }
     }
+}
 

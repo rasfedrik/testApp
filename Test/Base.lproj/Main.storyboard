@@ -41,7 +41,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="HbQ-B1-k5A">
-                        <barButtonItem key="rightBarButtonItem" image="list.bullet.rectangle" catalog="system" style="plain" id="QDc-Qu-Jb7">
+                        <barButtonItem key="leftBarButtonItem" image="list.bullet.rectangle" catalog="system" style="plain" id="QDc-Qu-Jb7">
                             <connections>
                                 <action selector="changeTag:" destination="BYZ-38-t0r" id="Yl4-ze-36x"/>
                             </connections>

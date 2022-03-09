@@ -35,10 +35,12 @@ struct ResponseAnswer: Codable {
 struct Answer: Codable {
     let owner: Owner?
     let answerID: Int?
+    let title: String?
+    let body: String?
 
     enum CodingKeys: String, CodingKey {
         case answerID = "answer_id"
-        case owner
+        case owner, title, body
     }
 }
 

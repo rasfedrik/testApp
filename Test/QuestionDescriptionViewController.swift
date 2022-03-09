@@ -10,6 +10,7 @@ import UIKit
 class QuestionDescriptionViewController: UIViewController {
     
     let networkManager = NetworkManager()
+    var question: Question!
    
      var textQuestion: UITextView = {
         var text = UITextView()
@@ -33,23 +34,36 @@ class QuestionDescriptionViewController: UIViewController {
         return table
     }()
     
-    var question = ""
-    
     var answers = [Answer]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        initActivityIndicator()
         obtainAnswers()
         setupUI()
     }
     
+    private var indicator = UIActivityIndicatorView()
+    
+    func initActivityIndicator() {
+        indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        indicator.style = .large
+        indicator.center = self.view.center
+        indicator.hidesWhenStopped = true
+        indicator.color = .white
+        indicator.backgroundColor = .clear
+        view.addSubview(indicator)
+    }
+
+    
      func obtainAnswers() {
- 
+        indicator.startAnimating()
+        guard let questionId = question.questionID else { return }
         // Вторая часть пути
         var path: String {
-            return "2.3/questions/\(question)/answers?order=desc&sort=activity&site=stackoverflow"
+            return "2.3/questions/\(questionId)/answers?order=desc&sort=activity&filter=!nKzQURFm*e&site=stackoverflow"
         }
 
         networkManager.obtainAnswers(path: path) { (result) in
@@ -59,6 +73,7 @@ class QuestionDescriptionViewController: UIViewController {
             // Обновление таблицы
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                self.indicator.stopAnimating()
             }
         }
     }
@@ -88,8 +103,18 @@ extension QuestionDescriptionViewController: UITableViewDataSource, UITableViewD
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "DescriptionTableViewCell") as! DescriptionTableViewCell
         
-        cell.textLabel?.text = "\(answers[indexPath.row].answerID ?? 0)"
+        cell.textLabel?.attributedText = answers[indexPath.row].body?.htmlToUtf
 
         return cell
+    }
+}
+
+extension String {
+    var htmlToUtf: NSAttributedString {
+        let attributed = try? NSAttributedString(
+            data: self.data(using: .unicode, allowLossyConversion: true)!,
+            options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue],
+            documentAttributes: nil)
+        return attributed!
     }
 }
