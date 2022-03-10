@@ -11,29 +11,9 @@ class QuestionDescriptionViewController: UIViewController {
     
     let networkManager = NetworkManager()
     var question: Question!
-   
-     var textQuestion: UITextView = {
-        var text = UITextView()
-        let attributedText = NSMutableAttributedString()
-        text.font = UIFont.systemFont(ofSize: 20)
-        text.backgroundColor = .lightGray
-        text.textAlignment = .left
-//        text.isScrollEnabled = false
-        // выделение текста
-        text.isEditable = false
-        text.translatesAutoresizingMaskIntoConstraints = false
-        return text
-    }()
     
-    var tableView: UITableView = {
-        var table = UITableView()
-            table.translatesAutoresizingMaskIntoConstraints = false
-            table.register(DescriptionTableViewCell.self, forCellReuseIdentifier: "DescriptionTableViewCell")
-            table.layer.backgroundColor = UIColor.green.cgColor
-            table.tableFooterView = UIView(frame: .zero)
-        return table
-    }()
-    
+    @IBOutlet weak var tableView: UITableView!
+
     var answers = [Answer]()
 
     override func viewDidLoad() {
@@ -41,8 +21,8 @@ class QuestionDescriptionViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         initActivityIndicator()
+        registeredCustomTableViewCell()
         obtainAnswers()
-        setupUI()
     }
     
     private var indicator = UIActivityIndicatorView()
@@ -56,7 +36,14 @@ class QuestionDescriptionViewController: UIViewController {
         indicator.backgroundColor = .clear
         view.addSubview(indicator)
     }
+    
+    private func registeredCustomTableViewCell() {
+        let textFieldQuestion = UINib(nibName: "QuestionTableViewCell", bundle: nil)
+        self.tableView.register(textFieldQuestion, forCellReuseIdentifier: "QuestionTableViewCell")
 
+        let textFieldAnswer = UINib(nibName: "AnswerTableViewCell", bundle: nil)
+        self.tableView.register(textFieldAnswer, forCellReuseIdentifier: "AnswerTableViewCell")
+    }
     
      func obtainAnswers() {
         indicator.startAnimating()
@@ -77,35 +64,59 @@ class QuestionDescriptionViewController: UIViewController {
             }
         }
     }
-    
-    private func setupUI() {
-        view.addSubview(textQuestion)
-        view.addSubview(tableView)
-        
-        textQuestion.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 35).isActive = true
-        textQuestion.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 35).isActive = true
-        textQuestion.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -35).isActive = true
-        textQuestion.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.3).isActive = true
-        
-        tableView.topAnchor.constraint(equalTo: textQuestion.bottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -35).isActive = true
-    }
 }
 
 extension QuestionDescriptionViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return answers.count
+        switch section {
+        case 0:
+            return 1
+        default:
+            return answers.count
+        }
+    }
+    
+    
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DescriptionTableViewCell") as! DescriptionTableViewCell
-        
-        cell.textLabel?.attributedText = answers[indexPath.row].body?.htmlToUtf
+        switch indexPath.section {
 
-        return cell
+        case 0:
+            if let cellQuestion = tableView.dequeueReusableCell(withIdentifier: "QuestionTableViewCell") as? QuestionTableViewCell {
+                
+                cellQuestion.nameLabel.text = "user: \(question.owner?.displayName ?? "none")"
+                cellQuestion.questionLabel.text = "question: \(question.title ?? "none")"
+                cellQuestion.dateLabel.text = String("date - \(NSDate(timeIntervalSinceNow: Double(question.lastEditDate ?? 0)))".dropLast(14))
+                cellQuestion.countLabel.text = "number of responses: \(question.answersCount ?? 0)"
+
+                return cellQuestion
+            }
+
+        default:
+            if let cellAnswer = tableView.dequeueReusableCell(withIdentifier: "AnswerTableViewCell") as? AnswerTableViewCell {
+                
+                cellAnswer.nameLabel.text = "user: \(answers[indexPath.row].owner?.displayName ?? "none")"
+                cellAnswer.answerLabel.attributedText = answers[indexPath.row].body?.htmlToUtf
+                cellAnswer.countLabel.text = "number of votes: \(answers[indexPath.row].score ?? 0)"
+                cellAnswer.dateLabel.text = String("date: \(NSDate(timeIntervalSinceNow: Double(answers[indexPath.row].lastEditDate ?? 0)))".dropLast(14))
+                
+                if answers[indexPath.row].isAccepted ?? false {
+                    cellAnswer.checkImage.image = UIImage(systemName: "checkmark.circle")
+                }
+                return cellAnswer
+            }
+        }
+        return UITableViewCell()
     }
 }
 
@@ -118,3 +129,4 @@ extension String {
         return attributed!
     }
 }
+

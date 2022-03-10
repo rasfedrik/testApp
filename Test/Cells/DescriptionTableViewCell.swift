@@ -9,7 +9,7 @@ import UIKit
 
 class DescriptionTableViewCell: UITableViewCell {
     
-    private let 
+
 
     override func awakeFromNib() {
         super.awakeFromNib()

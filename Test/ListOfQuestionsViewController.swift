@@ -134,13 +134,13 @@ extension ListOfQuestionsViewController: UITableViewDataSource, UITableViewDeleg
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         if let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell") as? CustomTableViewCell {
-            
+    
             let textLabel = questions[indexPath.row]
             
-            cell.nameLabel.text = textLabel.owner?.displayName
-            cell.questionLabel.text = textLabel.title
-            cell.answersLabel.text = "Количество ответов - \(textLabel.answerCount ?? 0)"
-            cell.dataLabel.text = "Дата - \(textLabel.lastEditDate ?? 0)"
+            cell.nameLabel.text = "user: \(textLabel.owner?.displayName ?? "none")"
+            cell.questionLabel.text = "question: \(textLabel.title ?? "none")"
+            cell.answersLabel.text = "number of responses: \(textLabel.answersCount ?? 0)"
+            cell.dataLabel.text = String("date: \(NSDate(timeIntervalSinceNow: Double(textLabel.lastEditDate ?? 0)))".dropLast(14))
             return cell
         }
             
@@ -160,9 +160,8 @@ extension ListOfQuestionsViewController: UITableViewDataSource, UITableViewDeleg
         let path = questions[indexPath.row]
         
         vc.title = path.owner?.displayName
-        vc.textQuestion.text = questions[indexPath.row].title
         vc.question = questions[indexPath.row]
-        
+  
         navigationController?.pushViewController(vc, animated: true)
     }
 }

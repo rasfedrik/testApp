@@ -15,7 +15,7 @@ struct Question: Codable {
     let tags: [String?]
     let questionID: Int?
     let answer: Answer?
-    let answerCount: Int?
+    let answersCount: Int?
     let owner: Owner?
     let lastEditDate: Int?
     let title: String?
@@ -23,7 +23,7 @@ struct Question: Codable {
     enum CodingKeys: String, CodingKey {
         case questionID = "question_id"
         case lastEditDate = "last_edit_date"
-        case answerCount = "answer_count"
+        case answersCount = "answer_count"
         case owner, tags, title, answer
     }
 }
@@ -37,10 +37,15 @@ struct Answer: Codable {
     let answerID: Int?
     let title: String?
     let body: String?
+    let isAccepted: Bool?
+    let score: Int?
+    let lastEditDate: Int?
 
     enum CodingKeys: String, CodingKey {
         case answerID = "answer_id"
-        case owner, title, body
+        case isAccepted = "is_accepted"
+        case lastEditDate = "last_edit_date"
+        case owner, title, body, score
     }
 }
 
