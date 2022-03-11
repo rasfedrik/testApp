@@ -62,11 +62,6 @@
                     <constraint firstItem="hTY-Hi-5yr" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="10" id="jIN-EO-U2v"/>
                     <constraint firstAttribute="bottomMargin" secondItem="hTY-Hi-5yr" secondAttribute="bottom" constant="10" id="s0Z-TD-Ayo"/>
                 </constraints>
-                <userDefinedRuntimeAttributes>
-                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                        <integer key="value" value="10"/>
-                    </userDefinedRuntimeAttribute>
-                </userDefinedRuntimeAttributes>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
@@ -75,7 +70,7 @@
                 <outlet property="nameLabel" destination="PuP-YQ-hQd" id="ekb-cr-qaO"/>
                 <outlet property="questionLabel" destination="TVX-KD-RMY" id="JdA-sm-vbC"/>
             </connections>
-            <point key="canvasLocation" x="38" y="68"/>
+            <point key="canvasLocation" x="37.681159420289859" y="67.96875"/>
         </tableViewCell>
     </objects>
     <resources>

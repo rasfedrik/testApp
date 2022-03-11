@@ -75,11 +75,6 @@
                     <constraint firstAttribute="trailingMargin" secondItem="bY7-61-DAp" secondAttribute="trailing" constant="5" id="q2R-xE-sZo"/>
                     <constraint firstItem="7Z7-wb-0HD" firstAttribute="leading" secondItem="38N-C5-yaV" secondAttribute="leadingMargin" constant="5" id="xW5-5b-JHD"/>
                 </constraints>
-                <userDefinedRuntimeAttributes>
-                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                        <integer key="value" value="10"/>
-                    </userDefinedRuntimeAttribute>
-                </userDefinedRuntimeAttributes>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="iCy-Vf-fpL"/>
             <connections>
