@@ -96,7 +96,7 @@ extension QuestionDescriptionViewController: UITableViewDataSource, UITableViewD
                 
                 cellQuestion.nameLabel.text = "user: \(question.owner?.displayName ?? "none")"
                 cellQuestion.questionLabel.text = "question: \(question.title ?? "none")"
-                cellQuestion.dateLabel.text = String("date - \(NSDate(timeIntervalSinceNow: Double(question.lastEditDate ?? 0)))".dropLast(14))
+                cellQuestion.dateLabel.text = String("date: \(NSDate(timeIntervalSinceNow: Double(question.lastEditDate ?? 0)))".dropLast(14))
                 cellQuestion.countLabel.text = "number of responses: \(question.answersCount ?? 0)"
 
                 return cellQuestion
